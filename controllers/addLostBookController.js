@@ -9,6 +9,7 @@ module.exports = function addLostBook(req, res) {
     quantity_id: b.quantity_id,
     book_id: b.book_id,
     sid: b.sid,
+    date: b.date,
   })
     .then((data) => {
       console.log(data);

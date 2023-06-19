@@ -2,6 +2,7 @@ const express = require("express");
 const issueBooks = require("../models/issueBook");
 const { Op } = require("sequelize");
 const ExcelJS = require("exceljs");
+const LostBook = require("../models/LostBook");
 const workbook = new ExcelJS.Workbook();
 
 module.exports = function generateReport(req, res) {
@@ -101,8 +102,6 @@ module.exports = function generateReport(req, res) {
             "Content-Type",
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
           );
-          //   res.setHeader(
-          //       "Content-Disposition","attachment;filename"="books.xlsx");
           workbook.xlsx.write(res);
         }
       })
@@ -137,6 +136,7 @@ module.exports = function generateReport(req, res) {
         console.log("Something went wrong!", err);
         res.send(err);
       });
+    // ! Circulated Books reports generating from a specific day to a specific day
   } else if (req.query.reportName == "circulatedBooks") {
     issueBooks
       .findAll({
@@ -163,6 +163,7 @@ module.exports = function generateReport(req, res) {
         console.log("Something went wrong!", err);
         res.send(err);
       });
+    // ! Due dated Books reports generating from a specific day to a specific day
   } else if (req.query.reportName == "dueDatedBooks") {
     issueBooks
       .findAll({
@@ -191,5 +192,21 @@ module.exports = function generateReport(req, res) {
         console.log("Something went wrong!", err);
         res.send(err);
       });
+    // ! Lost Books reports generating from a specific day to a specific day
+  } else if (req.query.reportName == "lostBooks") {
+    LostBook.findAll({
+      where: {
+        date: {
+          [Op.between]: [req.query.startDate, req.query.endDate || Date.now()],
+        },
+        // isReturned: false,
+      },
+    }).then((data) => {
+      console.log(data);
+      res.status(200).json({
+        result: true,
+        data: data,
+      });
+    });
   }
 };

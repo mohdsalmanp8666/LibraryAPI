@@ -11,6 +11,7 @@ const LostBook = connection.define(
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
+      autoIncrement: true,
     },
     quantity_id: {
       type: DataTypes.STRING,
@@ -32,6 +33,10 @@ const LostBook = connection.define(
         model: Student,
         key: "sid",
       },
+    },
+    date: {
+      type: DataTypes.DATEONLY,
+      allowNull: false,
     },
   },
   {
