@@ -1,5 +1,6 @@
 const Sequelize = require("sequelize");
 const sequelize = require("../dbconfig");
+const quantity = require("./quantity");
 const Book = sequelize.define(
   "Book",
   {
@@ -81,10 +82,12 @@ const Book = sequelize.define(
       type: Sequelize.DataTypes.INTEGER,
       allowNull: true,
     },
-    quantity: {
-      type: Sequelize.DataTypes.INTEGER,
-      allowNull: true,
-      default: 1,
+    quantity_id: {
+      type: Sequelize.DataTypes.STRING,
+      references: {
+        model: quantity,
+        key: "quantity_id",
+      },
     },
   },
   {

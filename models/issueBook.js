@@ -1,6 +1,8 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const connection = require("../dbconfig");
 const quantityModel = require("../models/quantity");
+const Book = require("./Book");
+const Student = require("./Student");
 
 const issueBooks = connection.define(
   "Book_Issued",
@@ -11,9 +13,13 @@ const issueBooks = connection.define(
       primaryKey: true,
       allowNull: false,
     },
-    quantity_id: {
+    book_id: {
       type: Sequelize.DataTypes.STRING,
       allowNull: false,
+      refernces: {
+        model: Book,
+        key: "book_id",
+      },
     },
     issue_date: {
       type: Sequelize.DataTypes.DATEONLY,
@@ -26,6 +32,10 @@ const issueBooks = connection.define(
     sid: {
       type: Sequelize.DataTypes.STRING,
       allowNull: false,
+      refernces: {
+        model: Student,
+        key: "sid",
+      },
     },
     return_date: {
       type: Sequelize.DataTypes.DATEONLY,
@@ -34,12 +44,12 @@ const issueBooks = connection.define(
     isReturned: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      default: 0,
+      defaultValue: 0,
     },
     isReissued: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      default: 0,
+      defaultValue: 0,
     },
     reIssue_Id: {
       type: DataTypes.STRING,

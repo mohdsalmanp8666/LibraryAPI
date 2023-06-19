@@ -16,16 +16,19 @@ module.exports = function collectBook(req, res) {
       }
     )
     .then((data) => {
-      console.log("Data updated successfully!");
+      console.log("Book collected successfully!");
       console.log(data);
       res.status(200).json({
-        message: "Data updated successfully!",
+        result: true,
+        message: "Book collected successfully!",
       });
     })
     .catch((err) => {
       console.log("Something went wrong while updating data!");
-      res.status(500).send(err);
+      res.status(500).json({
+        result: false,
+        message: "Someting went wrong while collecting book",
+        error: err,
+      });
     });
-  //   console.log(req.body.id);
-  //   res.send(req.body.id);
 };

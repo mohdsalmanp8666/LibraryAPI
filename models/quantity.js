@@ -8,19 +8,20 @@ const quantity = sequelize.define(
       primaryKey: true,
       allowNull: false,
     },
-    book_id: {
-      type: DataTypes.STRING,
+    total_quantity: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
-    isLost: {
-      type: DataTypes.BOOLEAN,
+    available_quantity: {
+      type: DataTypes.INTEGER,
       allowNull: false,
-      default: false,
     },
   },
   {
     freezeTableName: true,
     timeStamps: false,
+    createdAt: false,
+    updatedAt: false,
     tableName: "quantity",
   }
 );

@@ -2,6 +2,7 @@ const express = require("express");
 const sequelize = require("sequelize");
 const bookModel = require("../models/Book");
 const issuedBooksModel = require("../models/issueBook");
+const quantity = require("../models/quantity");
 
 module.exports = function getDashboardData(req, res) {
   // * Date Calculation for query & formatting date
@@ -20,9 +21,11 @@ module.exports = function getDashboardData(req, res) {
     reIssuedBooks = 0;
 
   // * Getting no.of Books
-  bookModel
+  quantity
     .findAll({
-      attributes: [[sequelize.fn("sum", sequelize.col("quantity")), "total"]],
+      attributes: [
+        [sequelize.fn("sum", sequelize.col("available_quantity")), "total"],
+      ],
     })
     .then((data) => {
       bookCount = Number(data[0].dataValues.total);

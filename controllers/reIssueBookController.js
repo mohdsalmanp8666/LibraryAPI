@@ -35,7 +35,7 @@ module.exports = function reIssueBook(req, res) {
         // * Creating new issue for that same book for 7 days
         issueBooks
           .create({
-            quantity_id: d.quantity_id,
+            book_id: d.book_id,
             issue_date: issue_date,
             due_date: due_date,
             sid: d.sid,

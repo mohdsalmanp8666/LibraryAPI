@@ -13,6 +13,7 @@ const issues = require("./routes/issues");
 const reIssueBookRouter = require("./routes/reIssueBook");
 const collectBookRouter = require("./routes/collectBook");
 const addStudentRoute = require("./routes/addStudent");
+const addLostBookRoute = require("./routes/addLostBook");
 const reportsRoute = require("./routes/reports");
 
 const dotenv = require("dotenv");
@@ -60,6 +61,7 @@ app.use("/issueBook", issueBookRouter);
 app.use("/issues", issues);
 app.use("/reIssueBook", reIssueBookRouter);
 app.use("/collectBook", collectBookRouter);
+app.use("/addLostBook", addLostBookRoute);
 app.use("/addStudent", addStudentRoute);
 app.use("/report", reportsRoute);
 

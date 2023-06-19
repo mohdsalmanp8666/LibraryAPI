@@ -6,7 +6,7 @@ module.exports = function issueBook(req, res) {
   b = req.body;
   issueBooks
     .create({
-      quantity_id: b.quantity_id,
+      book_id: b.book_id,
       issue_date: b.issue_date,
       due_date: b.due_date,
       sid: b.sid,
@@ -14,15 +14,19 @@ module.exports = function issueBook(req, res) {
       isReissued: false,
     })
     .then((data) => {
-      console.log("Data added successfully!");
+      console.log("Book Issued successfully!");
       console.log(data);
       res.status(200).json({
-        message: "Data added successfully!",
+        result: true,
+        message: "Book issued successfully!",
       });
     })
     .catch((err) => {
       console.log(err);
-      res.status(500).json(err);
+      res.status(500).json({
+        result: false,
+        message: "Someting went wrong while issueing book",
+        error: err,
+      });
     });
-  // res.send("Inside Issue Book");
 };
