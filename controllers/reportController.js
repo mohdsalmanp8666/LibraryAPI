@@ -1,21 +1,13 @@
 const express = require("express");
 const issueBooks = require("../models/issueBook");
 const { Op } = require("sequelize");
-const ExcelJS = require("exceljs");
 const LostBook = require("../models/LostBook");
-const workbook = new ExcelJS.Workbook();
 
 module.exports = function generateReport(req, res) {
   console.log(req.query);
-  workbook.removeWorksheet(req.query.reportName);
 
   //  ! Issued Books reports generating from a specific day to a specific day
   if (req.query.reportName == "issuedBooks") {
-    workbook.removeWorksheet("Issued Book (" + req.query.startDate + " )");
-    const sheet = workbook.addWorksheet(
-      "Issued Book (" + req.query.startDate + " )"
-    );
-
     issueBooks
       .findAll({
         where: {
@@ -25,89 +17,31 @@ module.exports = function generateReport(req, res) {
               req.query.endDate || Date.now(),
             ],
           },
+          sid: req.body.sid,
         },
       })
       .then((data) => {
         if (data.length < 1) {
           res.status(200).json({
+            result: true,
             message: "No data to show",
           });
         } else {
-          //   console.log(data);
-          // * Making headers in the Excel File
-          sheet.columns = [
-            { header: "ID", key: "issued_id", width: 10 },
-            { header: "Book Id", key: "quantity_id", width: 20 },
-            { header: "Issue Date", key: "issue_date", width: 25 },
-            { header: "Due Date", key: "due_date", width: 25 },
-            { header: "Student Id", key: "sid", width: 15 },
-            { header: "Book Collected", key: "isReturned", width: 15 },
-          ];
-          i = 2;
-          //   * Writing the database data in the excel file
-          data.forEach((element) => {
-            sheet.addRow({
-              issued_id: element.issued_id,
-              quantity_id: element.quantity_id,
-              issue_date: element.issue_date,
-              due_date: element.due_date,
-              sid: element.sid,
-              isReturned: element.isReturned == true ? "Yes" : "No",
-            });
-            console.log(i);
-            sheet.addConditionalFormatting({
-              ref: "F" + i,
-              rules: [
-                {
-                  priority: 1, // add this
-                  type: "containsText",
-                  operator: "containsText",
-                  text: "Yes",
-                  style: {
-                    fill: {
-                      type: "pattern",
-                      pattern: "solid",
-                      bgColor: { argb: "ffa4ffa4" },
-                      fgColor: { argb: "ff006100" },
-                    },
-                  },
-                },
-              ],
-            });
-
-            sheet.addConditionalFormatting({
-              ref: "F" + i,
-              rules: [
-                {
-                  priority: 1, // add this
-                  type: "containsText",
-                  operator: "containsText",
-                  text: "No",
-                  style: {
-                    fill: {
-                      type: "pattern",
-                      pattern: "solid",
-                      bgColor: { argb: "ffffc7ce" },
-                      fgColor: { argb: "ff9c0006" },
-                    },
-                  },
-                },
-              ],
-            });
-            i++;
+          console.log(data);
+          res.status(200).json({
+            result: true,
+            message: "Issued Books data",
+            data: data,
           });
-
-          //   * Sending the issued Books data
-          res.setHeader(
-            "Content-Type",
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-          );
-          workbook.xlsx.write(res);
         }
       })
       .catch((err) => {
         console.log("Something went wrong!", err);
-        res.send(err);
+        res.status(500).send({
+          result: false,
+          message: "something went wrong while generating issued books report",
+          error: err,
+        });
       });
     //   ! Reissueing Books reports generating from a specific day to a specific day
   } else if (req.query.reportName == "reIssuedBooks") {

@@ -48,7 +48,6 @@ const quantityModel = require("./models/quantity");
 const bookModel = require("./models/Book");
 
 sequelize.sync().then((data) => {
-  // console.log(data);
   console.log("All tables synced");
 });
 
