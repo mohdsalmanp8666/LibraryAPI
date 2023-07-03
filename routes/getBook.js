@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const verifyToken = require("../middleware/verifyToken");
-const dashoardController = require("../controllers/dashboardController");
+const getBookController = require("../controllers/getBookController");
 
-router.get("/", verifyToken, dashoardController);
+router.get("/", verifyToken, getBookController);
 
 module.exports = router;

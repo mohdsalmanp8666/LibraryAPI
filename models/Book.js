@@ -82,6 +82,11 @@ const Book = sequelize.define(
       type: Sequelize.DataTypes.INTEGER,
       allowNull: true,
     },
+    isLost: {
+      type: Sequelize.DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
     quantity_id: {
       type: Sequelize.DataTypes.STRING,
       references: {

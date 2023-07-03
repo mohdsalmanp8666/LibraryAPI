@@ -1,18 +1,13 @@
-const express = require("express");
 const sequelize = require("sequelize");
-const bookModel = require("../models/Book");
 const issuedBooksModel = require("../models/issueBook");
+const moment = require("moment");
 const quantity = require("../models/quantity");
 
+const today = moment();
 module.exports = function getDashboardData(req, res) {
   // * Date Calculation for query & formatting date
-  let date_ob = new Date();
-  let date =
-    date_ob.getFullYear() +
-    "-" +
-    ("0" + (date_ob.getMonth() + 1)).slice(-2) +
-    "-" +
-    date_ob.getDate();
+
+  let date = today.format("YYYY-MM-DD");
 
   // * Variables for making JSON for response
   var bookCount,
@@ -47,17 +42,19 @@ module.exports = function getDashboardData(req, res) {
               col: "issued_id",
               where: {
                 isReturned: false,
+                // issue_date: date,
               },
             })
             .then((count) => {
+              console.log(count);
               booksInCirculation = count;
-              // console.log("The no.of Circulated Book: ", count);
               // * Getting the no.of books Reissued current day
               issuedBooksModel
                 .count({
                   col: "issued_id",
                   where: {
                     isReissued: true,
+                    issue_date: date,
                   },
                 })
                 .then((count) => {
@@ -65,9 +62,9 @@ module.exports = function getDashboardData(req, res) {
 
                   // ! Sending Response
                   res.status(200).json({
-                    booksCount: bookCount,
-                    issuedBooks: issuedBooks,
-                    circulationBooks: booksInCirculation,
+                    totalBooks: bookCount,
+                    booksIssuedCurr: booksInCirculation,
+                    totalIssuedBooks: issuedBooks,
                     booksReissued: reIssuedBooks,
                   });
                 });
@@ -77,7 +74,9 @@ module.exports = function getDashboardData(req, res) {
     .catch((err) => {
       console.log(err);
       res.status(500).json({
+        result: false,
         message: "Something went wrong",
+        error: err,
       });
     });
 };

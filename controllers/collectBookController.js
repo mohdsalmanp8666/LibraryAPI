@@ -1,12 +1,16 @@
 const express = require("express");
 const issueBooks = require("../models/issueBook");
+const moment = require("moment");
+
+const today = moment();
 
 module.exports = function collectBook(req, res) {
   console.log(req.body.issued_id);
+  var return_date = today.format("YYYY-MM-DD");
   issueBooks
     .update(
       {
-        return_date: req.body.return_date,
+        return_date: return_date,
         isReturned: true,
       },
       {

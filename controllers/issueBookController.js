@@ -5,21 +5,63 @@ module.exports = function issueBook(req, res) {
   console.log(req.body);
   b = req.body;
   issueBooks
-    .create({
-      book_id: b.book_id,
-      issue_date: b.issue_date,
-      due_date: b.due_date,
-      sid: b.sid,
-      isReturned: false,
-      isReissued: false,
+    .count({
+      where: {
+        sid: b.sid,
+        isReturned: false,
+      },
     })
-    .then((data) => {
-      console.log("Book Issued successfully!");
+    .then((count) => {
+      // * Check if the student has issued more than 2 issued books
+      if (count >= 2) {
+        console.log("Student cannot issue more than 2 books");
+        res.status(200).json({
+          result: false,
+          message: "Student cannot issue more than 2 books",
+        });
+      } else {
+        // * if yhe student can issue book
+        issueBooks
+          .findAll({
+            where: {
+              book_id: b.book_id,
+              sid: b.sid,
+              isReturned: false,
+            },
+          })
 
-      res.status(200).json({
-        result: true,
-        message: "Book issued successfully!",
-      });
+          .then((data) => {
+            if (data.length > 0) {
+              res.status(200).json({
+                result: false,
+                message: "User has already issued this book",
+              });
+            } else {
+              issueBooks
+                .create({
+                  book_id: b.book_id,
+                  issue_date: b.issue_date,
+                  due_date: b.due_date,
+                  sid: b.sid,
+                  isReturned: false,
+                  isReissued: false,
+                })
+                .then((data) => {
+                  
+                  // res.status(200).json({
+                  //   result: true,
+                  //   message: "User can issue the book",
+                  // });
+                  console.log("Book Issued successfully!");
+                  res.status(200).json({
+                    result: true,
+                    message: "Book issued successfully!",
+                    // length: data.length,
+                  });
+                });
+            }
+          });
+      }
     })
     .catch((err) => {
       console.log(err);

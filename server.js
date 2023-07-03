@@ -1,12 +1,19 @@
 // ! New Code
 const express = require("express");
+const fileUpload = require("express-fileupload");
 const app = express();
+const cors = require("cors");
+
+// default options
+app.use(fileUpload());
+app.use(cors());
 const bodyParser = require("body-parser");
 const sequelize = require("./dbconfig");
 
 // ! Routes importing
 const loginRoute = require("./routes/login");
 const dashboardRoute = require("./routes/dashboard");
+const getBookRoute = require("./routes/getBook");
 const addBookRoute = require("./routes/addBook");
 const issueBookRouter = require("./routes/issueBook");
 const issues = require("./routes/issues");
@@ -15,6 +22,10 @@ const collectBookRouter = require("./routes/collectBook");
 const addStudentRoute = require("./routes/addStudent");
 const addLostBookRoute = require("./routes/addLostBook");
 const reportsRoute = require("./routes/reports");
+const commonRoute = require("./routes/commonRoutes");
+
+// Temp
+const uploadFileRoute = require("./routes/uploadFile");
 
 const dotenv = require("dotenv");
 
@@ -55,6 +66,7 @@ sequelize.sync().then((data) => {
 app.get("/", (req, res) => res.send("Hello World!"));
 app.use("/login", loginRoute);
 app.use("/dashboard", dashboardRoute);
+app.use("/getBooks", getBookRoute);
 app.use("/addBook", addBookRoute);
 app.use("/issueBook", issueBookRouter);
 app.use("/issues", issues);
@@ -63,6 +75,10 @@ app.use("/collectBook", collectBookRouter);
 app.use("/addLostBook", addLostBookRoute);
 app.use("/addStudent", addStudentRoute);
 app.use("/report", reportsRoute);
+app.use("/data", commonRoute);
+
+// Temp
+app.use("/uploadFile", uploadFileRoute);
 
 app.listen(
   process.env.PORT || 5002,

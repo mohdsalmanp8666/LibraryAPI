@@ -5,7 +5,6 @@ const router = express.Router();
 
 router.get("/", verifyToken, reportController);
 
-
 router.all("/dailyTransaction", verifyToken, (req, res) => {
   res.send("Daily book transaction report");
 });

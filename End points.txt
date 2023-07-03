@@ -1,8 +1,8 @@
 End points
-1. /login (post) (Done)
+1. /login (get) (Done)
 Request:
 {
-"sid": "abc@gmail.com",
+"email": "abc@gmail.com",
 "password":"Pass123"
 }
 
@@ -29,6 +29,23 @@ Response:
     message:"Registeration successfull!",
 }
 
+/data/getBookId (get)
+Response:
+{
+    "result": true,
+    "message": "Book id sent successfully!",
+    "data": [
+        {
+            "book_id": "AAPS"
+        },
+        {
+            "book_id": "DBMS"
+        },
+        {
+            "book_id": "OS"
+        }
+    ]
+}
 
 
 2. /dashboard (get) (Done)
@@ -38,6 +55,30 @@ Response:
     "issuedBooks": 0,
     "circulationBooks": 0,
     "booksReissued": 0
+}
+
+/issues (get) (Done)
+Request:
+{
+    "sid":"VU1F2021023"
+}
+Response:
+{
+    "result": true,
+    "message": "Successfully displayed issued Books data!",
+    "data": [
+        {
+            "issued_id": 2,
+            "book_id": "AAPS",
+            "issue_date": "2023-06-20",
+            "due_date": "2023-06-27",
+            "sid": "VU1F2021023",
+            "return_date": null,
+            "isReturned": false,
+            "isReissued": false,
+            "reIssue_Id": null
+        }
+    ]
 }
 
 3. /addBook (post) (Done)
@@ -68,7 +109,13 @@ Request:
 4. /issueBook (post) (DONE)
 Request:
 {
-    "issued_id":"1"
+    "book_id":"AAPS",
+    "issue_date":"2023/06/20",
+    "due_date":"2023/06/27" yeh +15 days kar k bhej dena
+    ,"sid":"VU1F2021023",
+    "return_date":null,
+    "quantity_id":"AAPS7"
+
 }
 Response:
 {

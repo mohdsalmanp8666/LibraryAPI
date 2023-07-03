@@ -1,21 +1,34 @@
 const express = require("express");
+const moment = require("moment");
+const m = moment();
 const issueBooks = require("../models/issueBook");
 
 module.exports = function reIssueBook(req, res) {
+  console.log("Inside reIssueBook COntroller");
+  console.log(req.body.issued_id);
   // * Getting the current data and making due and return date in specific format
-  let date_ob = new Date();
-  let issue_date =
-    date_ob.getFullYear() +
-    "-" +
-    ("0" + (date_ob.getMonth() + 1)).slice(-2) +
-    "-" +
-    date_ob.getDate();
-  let due_date =
-    date_ob.getFullYear() +
-    "-" +
-    ("0" + (date_ob.getMonth() + 1)).slice(-2) +
-    "-" +
-    (date_ob.getDate() + 7);
+  let issue_date = m.format("YYYY-MM-DD");
+  let due_date = moment().add(15, "days");
+  due_date = due_date.format("YYYY-MM-DD");
+  // console.log(due_date.format("YYYY-MM-DD"));
+  // let date_ob = new Date();
+  // let issue_date;
+  // let due_date;
+  // issue_date.setDate(date_ob);
+  // due_date.setDate(date_ob);
+  // issue_date =
+  //   date_ob.getFullYear() +
+  //   "-" +
+  //   ("0" + (date_ob.getMonth() + 1)).slice(-2) +
+  //   "-" +
+  //   date_ob.getDate();
+
+  // due_date =
+  //   date_ob.getFullYear() +
+  //   "-" +
+  //   ("0" + (date_ob.getMonth() + 1)).slice(-2) +
+  //   "-" +
+  //   (date_ob.getDate() + 7);
 
   // * Getting the issueing details for the specific issued id
   issueBooks
@@ -25,6 +38,8 @@ module.exports = function reIssueBook(req, res) {
       },
     })
     .then((data) => {
+      // console.log(data);
+      // console.log(due_date.format("YYYY-MM-DD"));
       if (data.lenght < 1) {
         res.send(200).json({
           message: "No data to display!",
@@ -67,6 +82,7 @@ module.exports = function reIssueBook(req, res) {
                 res.status(200).json({
                   result: true,
                   message: "Book Reissued Successfully!",
+                  data,
                 });
               });
           });

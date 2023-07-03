@@ -1,8 +1,7 @@
-const express = require("express");
 const issueBooks = require("../models/issueBook");
 
 module.exports = function issues(req, res) {
-  let b = req.body;
+  let b = req.query;
   issueBooks
     .findAll({
       where: {
@@ -17,6 +16,7 @@ module.exports = function issues(req, res) {
         res.status(200).json({
           result: true,
           message: "No data to display!",
+          data: [],
         });
       } else {
         console.log("Successfully displayed issued Books data!");
